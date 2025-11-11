@@ -7,7 +7,10 @@
       "Bash(npm install:*)",
       "Bash(del:*)",
       "Bash(ren:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []
