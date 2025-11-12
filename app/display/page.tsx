@@ -159,9 +159,9 @@ export default function Display() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col overflow-hidden">
       {/* Cabeçalho com Data, Nome e Hora */}
-      <div className="flex items-center justify-between px-8 py-6">
+      <div className="flex items-center justify-between px-8 py-6 flex-shrink-0">
         {/* Data - Esquerda */}
         <div className="text-white text-2xl font-semibold">
           {dataHora.data}
@@ -227,7 +227,7 @@ export default function Display() {
       </div>
 
       {/* Últimas Senhas Chamadas - Fixo no Bottom */}
-      <div className="bg-white/95 backdrop-blur w-full py-6 px-8 shadow-2xl">
+      <div className="bg-white/95 backdrop-blur w-full py-6 px-8 shadow-2xl flex-shrink-0">
         <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
           Últimas Senhas Chamadas
         </h2>
