@@ -23,8 +23,12 @@ export default function Configuracao() {
   const [configuracao, setConfiguracao] = useState<ConfiguracaoSenhas>({
     senhaAtualNormal: 1,
     senhaAtualPrioritaria: 1,
+    senhaAtualResposta: 1,
+    senhaAtualRespostaPrioritaria: 1,
     prefixoNormal: 'N',
-    prefixoPrioritaria: 'P'
+    prefixoPrioritaria: 'P',
+    prefixoResposta: 'R',
+    prefixoRespostaPrioritaria: 'RP'
   });
 
   const [abaSelecionada, setAbaSelecionada] = useState<'guiches' | 'usuarios' | 'senhas'>('guiches');
@@ -127,7 +131,9 @@ export default function Configuracao() {
     await api.updateConfiguracao({
       ...configuracao,
       senhaAtualNormal: 1,
-      senhaAtualPrioritaria: 1
+      senhaAtualPrioritaria: 1,
+      senhaAtualResposta: 1,
+      senhaAtualRespostaPrioritaria: 1
     });
 
     await loadData();
@@ -321,12 +327,12 @@ export default function Configuracao() {
               <div className="space-y-6">
                 <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Prefixos das Senhas</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Prefixo Normal</label>
                       <input
                         type="text"
-                        maxLength={1}
+                        maxLength={2}
                         value={configuracao.prefixoNormal}
                         onChange={(e) => setConfiguracao({ ...configuracao, prefixoNormal: e.target.value.toUpperCase() })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
@@ -336,9 +342,29 @@ export default function Configuracao() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">Prefixo Prioritária</label>
                       <input
                         type="text"
-                        maxLength={1}
+                        maxLength={2}
                         value={configuracao.prefixoPrioritaria}
                         onChange={(e) => setConfiguracao({ ...configuracao, prefixoPrioritaria: e.target.value.toUpperCase() })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Prefixo Resposta</label>
+                      <input
+                        type="text"
+                        maxLength={2}
+                        value={configuracao.prefixoResposta}
+                        onChange={(e) => setConfiguracao({ ...configuracao, prefixoResposta: e.target.value.toUpperCase() })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Prefixo Resposta Prioritária</label>
+                      <input
+                        type="text"
+                        maxLength={2}
+                        value={configuracao.prefixoRespostaPrioritaria}
+                        onChange={(e) => setConfiguracao({ ...configuracao, prefixoRespostaPrioritaria: e.target.value.toUpperCase() })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
                       />
                     </div>
@@ -347,7 +373,7 @@ export default function Configuracao() {
 
                 <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Contadores Atuais</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Próxima Senha Normal</label>
                       <input
@@ -365,6 +391,26 @@ export default function Configuracao() {
                         min="1"
                         value={configuracao.senhaAtualPrioritaria}
                         onChange={(e) => setConfiguracao({ ...configuracao, senhaAtualPrioritaria: parseInt(e.target.value) || 1 })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Próxima Senha Resposta</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={configuracao.senhaAtualResposta}
+                        onChange={(e) => setConfiguracao({ ...configuracao, senhaAtualResposta: parseInt(e.target.value) || 1 })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Próxima Senha Resposta Prioritária</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={configuracao.senhaAtualRespostaPrioritaria}
+                        onChange={(e) => setConfiguracao({ ...configuracao, senhaAtualRespostaPrioritaria: parseInt(e.target.value) || 1 })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       />
                     </div>

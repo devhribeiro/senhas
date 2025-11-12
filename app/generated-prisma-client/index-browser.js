@@ -143,6 +143,7 @@ exports.Prisma.SenhaChamadaScalarFieldEnum = {
   guiche: 'guiche',
   horario: 'horario',
   isPrioritaria: 'isPrioritaria',
+  tipoSenha: 'tipoSenha',
   status: 'status',
   horarioInicio: 'horarioInicio',
   horarioFim: 'horarioFim',
@@ -153,8 +154,12 @@ exports.Prisma.ConfiguracaoScalarFieldEnum = {
   id: 'id',
   senhaAtualNormal: 'senhaAtualNormal',
   senhaAtualPrioritaria: 'senhaAtualPrioritaria',
+  senhaAtualResposta: 'senhaAtualResposta',
+  senhaAtualRespostaPrioritaria: 'senhaAtualRespostaPrioritaria',
   prefixoNormal: 'prefixoNormal',
   prefixoPrioritaria: 'prefixoPrioritaria',
+  prefixoResposta: 'prefixoResposta',
+  prefixoRespostaPrioritaria: 'prefixoRespostaPrioritaria',
   updatedAt: 'updatedAt'
 };
 

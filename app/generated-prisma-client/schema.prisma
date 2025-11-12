@@ -41,6 +41,7 @@ model SenhaChamada {
   guiche        String
   horario       DateTime
   isPrioritaria Boolean
+  tipoSenha     String    @default("N") // N = Normal, P = Prioritária, R = Resposta, RP = Resposta Prioritária
   status        String    @default("chamada")
   horarioInicio DateTime?
   horarioFim    DateTime?
@@ -51,12 +52,16 @@ model SenhaChamada {
 
 // Modelo de configuração
 model Configuracao {
-  id                    Int      @id @default(1)
-  senhaAtualNormal      Int      @default(1)
-  senhaAtualPrioritaria Int      @default(1)
-  prefixoNormal         String   @default("N")
-  prefixoPrioritaria    String   @default("P")
-  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at")
+  id                            Int      @id @default(1)
+  senhaAtualNormal              Int      @default(1)
+  senhaAtualPrioritaria         Int      @default(1)
+  senhaAtualResposta            Int      @default(1)
+  senhaAtualRespostaPrioritaria Int      @default(1)
+  prefixoNormal                 String   @default("N")
+  prefixoPrioritaria            String   @default("P")
+  prefixoResposta               String   @default("R")
+  prefixoRespostaPrioritaria    String   @default("RP")
+  updatedAt                     DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("configuracao")
 }

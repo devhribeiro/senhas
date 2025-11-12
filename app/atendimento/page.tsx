@@ -16,8 +16,12 @@ export default function Atendimento() {
   const [configuracao, setConfiguracao] = useState<ConfiguracaoSenhas>({
     senhaAtualNormal: 1,
     senhaAtualPrioritaria: 1,
+    senhaAtualResposta: 1,
+    senhaAtualRespostaPrioritaria: 1,
     prefixoNormal: 'N',
-    prefixoPrioritaria: 'P'
+    prefixoPrioritaria: 'P',
+    prefixoResposta: 'R',
+    prefixoRespostaPrioritaria: 'RP'
   });
 
   useEffect(() => {
@@ -72,7 +76,7 @@ export default function Atendimento() {
     }
   };
 
-  const chamarSenha = async (isPrioritaria: boolean) => {
+  const chamarSenha = async (tipoSenha: 'N' | 'P' | 'R' | 'RP') => {
     if (!guicheAtual) {
       alert('Você não está vinculado a nenhum guichê. Vá em Configuração para vincular.');
       return;
@@ -91,15 +95,34 @@ export default function Atendimento() {
       const config = { ...configuracao };
       let numeroSenha: number;
       let prefixo: string;
+      let isPrioritaria: boolean;
 
-      if (isPrioritaria) {
-        numeroSenha = config.senhaAtualPrioritaria;
-        prefixo = config.prefixoPrioritaria;
-        config.senhaAtualPrioritaria++;
-      } else {
-        numeroSenha = config.senhaAtualNormal;
-        prefixo = config.prefixoNormal;
-        config.senhaAtualNormal++;
+      // Determinar qual contador e prefixo usar baseado no tipo
+      switch (tipoSenha) {
+        case 'N': // Normal
+          numeroSenha = config.senhaAtualNormal;
+          prefixo = config.prefixoNormal;
+          isPrioritaria = false;
+          config.senhaAtualNormal++;
+          break;
+        case 'P': // Prioritária
+          numeroSenha = config.senhaAtualPrioritaria;
+          prefixo = config.prefixoPrioritaria;
+          isPrioritaria = true;
+          config.senhaAtualPrioritaria++;
+          break;
+        case 'R': // Resposta Normal
+          numeroSenha = config.senhaAtualResposta;
+          prefixo = config.prefixoResposta;
+          isPrioritaria = false;
+          config.senhaAtualResposta++;
+          break;
+        case 'RP': // Resposta Prioritária
+          numeroSenha = config.senhaAtualRespostaPrioritaria;
+          prefixo = config.prefixoRespostaPrioritaria;
+          isPrioritaria = true;
+          config.senhaAtualRespostaPrioritaria++;
+          break;
       }
 
       const senha = `${prefixo}${numeroSenha.toString().padStart(3, '0')}`;
@@ -109,6 +132,7 @@ export default function Atendimento() {
         guiche: `Guichê ${guicheAtual.numero}`,
         horario: new Date().toISOString(),
         isPrioritaria,
+        tipoSenha,
         status: 'chamada'
       };
 
@@ -309,19 +333,20 @@ export default function Atendimento() {
               )}
 
             {/* Botões de Chamar Senha */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Senha Normal */}
               <button
-                onClick={() => chamarSenha(false)}
+                onClick={() => chamarSenha('N')}
                 disabled={
                   !!(ultimaSenhaChamada &&
                   (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
                 }
-                className="group bg-white hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
+                className="group bg-white hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 rounded-xl shadow-md p-6 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
                 <div className="flex flex-col items-center">
-                  <div className="p-4 bg-blue-100 group-hover:bg-white rounded-full mb-4 transition-colors">
+                  <div className="p-3 bg-blue-100 group-hover:bg-white rounded-full mb-3 transition-colors">
                     <svg
-                      className="w-12 h-12 text-blue-600 group-hover:text-blue-500 transition-colors"
+                      className="w-8 h-8 text-blue-600 group-hover:text-blue-500 transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -334,27 +359,28 @@ export default function Atendimento() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-white mb-2 transition-colors">
-                    Senha Normal
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-white mb-1 transition-colors">
+                    Normal
                   </h3>
-                  <p className="text-gray-600 group-hover:text-blue-100 text-center transition-colors">
-                    Próxima: {configuracao.prefixoNormal}{configuracao.senhaAtualNormal.toString().padStart(3, '0')}
+                  <p className="text-sm text-gray-600 group-hover:text-blue-100 text-center transition-colors">
+                    {configuracao.prefixoNormal}{configuracao.senhaAtualNormal.toString().padStart(3, '0')}
                   </p>
                 </div>
               </button>
 
+              {/* Senha Prioritária */}
               <button
-                onClick={() => chamarSenha(true)}
+                onClick={() => chamarSenha('P')}
                 disabled={
                   !!(ultimaSenhaChamada &&
                   (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
                 }
-                className="group bg-white hover:bg-gradient-to-br hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
+                className="group bg-white hover:bg-gradient-to-br hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-md p-6 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
                 <div className="flex flex-col items-center">
-                  <div className="p-4 bg-orange-100 group-hover:bg-white rounded-full mb-4 transition-colors">
+                  <div className="p-3 bg-orange-100 group-hover:bg-white rounded-full mb-3 transition-colors">
                     <svg
-                      className="w-12 h-12 text-orange-600 group-hover:text-orange-500 transition-colors"
+                      className="w-8 h-8 text-orange-600 group-hover:text-orange-500 transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -367,11 +393,79 @@ export default function Atendimento() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-white mb-2 transition-colors">
-                    Senha Prioritária
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-white mb-1 transition-colors">
+                    Prioritária
                   </h3>
-                  <p className="text-gray-600 group-hover:text-orange-100 text-center transition-colors">
-                    Próxima: {configuracao.prefixoPrioritaria}{configuracao.senhaAtualPrioritaria.toString().padStart(3, '0')}
+                  <p className="text-sm text-gray-600 group-hover:text-orange-100 text-center transition-colors">
+                    {configuracao.prefixoPrioritaria}{configuracao.senhaAtualPrioritaria.toString().padStart(3, '0')}
+                  </p>
+                </div>
+              </button>
+
+              {/* Senha Resposta */}
+              <button
+                onClick={() => chamarSenha('R')}
+                disabled={
+                  !!(ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
+                }
+                className="group bg-white hover:bg-gradient-to-br hover:from-green-500 hover:to-green-600 rounded-xl shadow-md p-6 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
+              >
+                <div className="flex flex-col items-center">
+                  <div className="p-3 bg-green-100 group-hover:bg-white rounded-full mb-3 transition-colors">
+                    <svg
+                      className="w-8 h-8 text-green-600 group-hover:text-green-500 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-white mb-1 transition-colors">
+                    Resposta
+                  </h3>
+                  <p className="text-sm text-gray-600 group-hover:text-green-100 text-center transition-colors">
+                    {configuracao.prefixoResposta}{configuracao.senhaAtualResposta.toString().padStart(3, '0')}
+                  </p>
+                </div>
+              </button>
+
+              {/* Senha Resposta Prioritária */}
+              <button
+                onClick={() => chamarSenha('RP')}
+                disabled={
+                  !!(ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
+                }
+                className="group bg-white hover:bg-gradient-to-br hover:from-purple-500 hover:to-purple-600 rounded-xl shadow-md p-6 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
+              >
+                <div className="flex flex-col items-center">
+                  <div className="p-3 bg-purple-100 group-hover:bg-white rounded-full mb-3 transition-colors">
+                    <svg
+                      className="w-8 h-8 text-purple-600 group-hover:text-purple-500 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-white mb-1 transition-colors">
+                    Resp. Prior.
+                  </h3>
+                  <p className="text-sm text-gray-600 group-hover:text-purple-100 text-center transition-colors">
+                    {configuracao.prefixoRespostaPrioritaria}{configuracao.senhaAtualRespostaPrioritaria.toString().padStart(3, '0')}
                   </p>
                 </div>
               </button>

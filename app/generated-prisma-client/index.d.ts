@@ -3337,6 +3337,7 @@ export namespace Prisma {
     guiche: string | null
     horario: Date | null
     isPrioritaria: boolean | null
+    tipoSenha: string | null
     status: string | null
     horarioInicio: Date | null
     horarioFim: Date | null
@@ -3349,6 +3350,7 @@ export namespace Prisma {
     guiche: string | null
     horario: Date | null
     isPrioritaria: boolean | null
+    tipoSenha: string | null
     status: string | null
     horarioInicio: Date | null
     horarioFim: Date | null
@@ -3361,6 +3363,7 @@ export namespace Prisma {
     guiche: number
     horario: number
     isPrioritaria: number
+    tipoSenha: number
     status: number
     horarioInicio: number
     horarioFim: number
@@ -3383,6 +3386,7 @@ export namespace Prisma {
     guiche?: true
     horario?: true
     isPrioritaria?: true
+    tipoSenha?: true
     status?: true
     horarioInicio?: true
     horarioFim?: true
@@ -3395,6 +3399,7 @@ export namespace Prisma {
     guiche?: true
     horario?: true
     isPrioritaria?: true
+    tipoSenha?: true
     status?: true
     horarioInicio?: true
     horarioFim?: true
@@ -3407,6 +3412,7 @@ export namespace Prisma {
     guiche?: true
     horario?: true
     isPrioritaria?: true
+    tipoSenha?: true
     status?: true
     horarioInicio?: true
     horarioFim?: true
@@ -3506,6 +3512,7 @@ export namespace Prisma {
     guiche: string
     horario: Date
     isPrioritaria: boolean
+    tipoSenha: string
     status: string
     horarioInicio: Date | null
     horarioFim: Date | null
@@ -3537,6 +3544,7 @@ export namespace Prisma {
     guiche?: boolean
     horario?: boolean
     isPrioritaria?: boolean
+    tipoSenha?: boolean
     status?: boolean
     horarioInicio?: boolean
     horarioFim?: boolean
@@ -3549,6 +3557,7 @@ export namespace Prisma {
     guiche?: boolean
     horario?: boolean
     isPrioritaria?: boolean
+    tipoSenha?: boolean
     status?: boolean
     horarioInicio?: boolean
     horarioFim?: boolean
@@ -3561,6 +3570,7 @@ export namespace Prisma {
     guiche?: boolean
     horario?: boolean
     isPrioritaria?: boolean
+    tipoSenha?: boolean
     status?: boolean
     horarioInicio?: boolean
     horarioFim?: boolean
@@ -3573,13 +3583,14 @@ export namespace Prisma {
     guiche?: boolean
     horario?: boolean
     isPrioritaria?: boolean
+    tipoSenha?: boolean
     status?: boolean
     horarioInicio?: boolean
     horarioFim?: boolean
     createdAt?: boolean
   }
 
-  export type SenhaChamadaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senha" | "guiche" | "horario" | "isPrioritaria" | "status" | "horarioInicio" | "horarioFim" | "createdAt", ExtArgs["result"]["senhaChamada"]>
+  export type SenhaChamadaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senha" | "guiche" | "horario" | "isPrioritaria" | "tipoSenha" | "status" | "horarioInicio" | "horarioFim" | "createdAt", ExtArgs["result"]["senhaChamada"]>
 
   export type $SenhaChamadaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SenhaChamada"
@@ -3590,6 +3601,7 @@ export namespace Prisma {
       guiche: string
       horario: Date
       isPrioritaria: boolean
+      tipoSenha: string
       status: string
       horarioInicio: Date | null
       horarioFim: Date | null
@@ -4022,6 +4034,7 @@ export namespace Prisma {
     readonly guiche: FieldRef<"SenhaChamada", 'String'>
     readonly horario: FieldRef<"SenhaChamada", 'DateTime'>
     readonly isPrioritaria: FieldRef<"SenhaChamada", 'Boolean'>
+    readonly tipoSenha: FieldRef<"SenhaChamada", 'String'>
     readonly status: FieldRef<"SenhaChamada", 'String'>
     readonly horarioInicio: FieldRef<"SenhaChamada", 'DateTime'>
     readonly horarioFim: FieldRef<"SenhaChamada", 'DateTime'>
@@ -4408,20 +4421,28 @@ export namespace Prisma {
     id: number | null
     senhaAtualNormal: number | null
     senhaAtualPrioritaria: number | null
+    senhaAtualResposta: number | null
+    senhaAtualRespostaPrioritaria: number | null
   }
 
   export type ConfiguracaoSumAggregateOutputType = {
     id: number | null
     senhaAtualNormal: number | null
     senhaAtualPrioritaria: number | null
+    senhaAtualResposta: number | null
+    senhaAtualRespostaPrioritaria: number | null
   }
 
   export type ConfiguracaoMinAggregateOutputType = {
     id: number | null
     senhaAtualNormal: number | null
     senhaAtualPrioritaria: number | null
+    senhaAtualResposta: number | null
+    senhaAtualRespostaPrioritaria: number | null
     prefixoNormal: string | null
     prefixoPrioritaria: string | null
+    prefixoResposta: string | null
+    prefixoRespostaPrioritaria: string | null
     updatedAt: Date | null
   }
 
@@ -4429,8 +4450,12 @@ export namespace Prisma {
     id: number | null
     senhaAtualNormal: number | null
     senhaAtualPrioritaria: number | null
+    senhaAtualResposta: number | null
+    senhaAtualRespostaPrioritaria: number | null
     prefixoNormal: string | null
     prefixoPrioritaria: string | null
+    prefixoResposta: string | null
+    prefixoRespostaPrioritaria: string | null
     updatedAt: Date | null
   }
 
@@ -4438,8 +4463,12 @@ export namespace Prisma {
     id: number
     senhaAtualNormal: number
     senhaAtualPrioritaria: number
+    senhaAtualResposta: number
+    senhaAtualRespostaPrioritaria: number
     prefixoNormal: number
     prefixoPrioritaria: number
+    prefixoResposta: number
+    prefixoRespostaPrioritaria: number
     updatedAt: number
     _all: number
   }
@@ -4449,20 +4478,28 @@ export namespace Prisma {
     id?: true
     senhaAtualNormal?: true
     senhaAtualPrioritaria?: true
+    senhaAtualResposta?: true
+    senhaAtualRespostaPrioritaria?: true
   }
 
   export type ConfiguracaoSumAggregateInputType = {
     id?: true
     senhaAtualNormal?: true
     senhaAtualPrioritaria?: true
+    senhaAtualResposta?: true
+    senhaAtualRespostaPrioritaria?: true
   }
 
   export type ConfiguracaoMinAggregateInputType = {
     id?: true
     senhaAtualNormal?: true
     senhaAtualPrioritaria?: true
+    senhaAtualResposta?: true
+    senhaAtualRespostaPrioritaria?: true
     prefixoNormal?: true
     prefixoPrioritaria?: true
+    prefixoResposta?: true
+    prefixoRespostaPrioritaria?: true
     updatedAt?: true
   }
 
@@ -4470,8 +4507,12 @@ export namespace Prisma {
     id?: true
     senhaAtualNormal?: true
     senhaAtualPrioritaria?: true
+    senhaAtualResposta?: true
+    senhaAtualRespostaPrioritaria?: true
     prefixoNormal?: true
     prefixoPrioritaria?: true
+    prefixoResposta?: true
+    prefixoRespostaPrioritaria?: true
     updatedAt?: true
   }
 
@@ -4479,8 +4520,12 @@ export namespace Prisma {
     id?: true
     senhaAtualNormal?: true
     senhaAtualPrioritaria?: true
+    senhaAtualResposta?: true
+    senhaAtualRespostaPrioritaria?: true
     prefixoNormal?: true
     prefixoPrioritaria?: true
+    prefixoResposta?: true
+    prefixoRespostaPrioritaria?: true
     updatedAt?: true
     _all?: true
   }
@@ -4575,8 +4620,12 @@ export namespace Prisma {
     id: number
     senhaAtualNormal: number
     senhaAtualPrioritaria: number
+    senhaAtualResposta: number
+    senhaAtualRespostaPrioritaria: number
     prefixoNormal: string
     prefixoPrioritaria: string
+    prefixoResposta: string
+    prefixoRespostaPrioritaria: string
     updatedAt: Date
     _count: ConfiguracaoCountAggregateOutputType | null
     _avg: ConfiguracaoAvgAggregateOutputType | null
@@ -4603,8 +4652,12 @@ export namespace Prisma {
     id?: boolean
     senhaAtualNormal?: boolean
     senhaAtualPrioritaria?: boolean
+    senhaAtualResposta?: boolean
+    senhaAtualRespostaPrioritaria?: boolean
     prefixoNormal?: boolean
     prefixoPrioritaria?: boolean
+    prefixoResposta?: boolean
+    prefixoRespostaPrioritaria?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracao"]>
 
@@ -4612,8 +4665,12 @@ export namespace Prisma {
     id?: boolean
     senhaAtualNormal?: boolean
     senhaAtualPrioritaria?: boolean
+    senhaAtualResposta?: boolean
+    senhaAtualRespostaPrioritaria?: boolean
     prefixoNormal?: boolean
     prefixoPrioritaria?: boolean
+    prefixoResposta?: boolean
+    prefixoRespostaPrioritaria?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracao"]>
 
@@ -4621,8 +4678,12 @@ export namespace Prisma {
     id?: boolean
     senhaAtualNormal?: boolean
     senhaAtualPrioritaria?: boolean
+    senhaAtualResposta?: boolean
+    senhaAtualRespostaPrioritaria?: boolean
     prefixoNormal?: boolean
     prefixoPrioritaria?: boolean
+    prefixoResposta?: boolean
+    prefixoRespostaPrioritaria?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracao"]>
 
@@ -4630,12 +4691,16 @@ export namespace Prisma {
     id?: boolean
     senhaAtualNormal?: boolean
     senhaAtualPrioritaria?: boolean
+    senhaAtualResposta?: boolean
+    senhaAtualRespostaPrioritaria?: boolean
     prefixoNormal?: boolean
     prefixoPrioritaria?: boolean
+    prefixoResposta?: boolean
+    prefixoRespostaPrioritaria?: boolean
     updatedAt?: boolean
   }
 
-  export type ConfiguracaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senhaAtualNormal" | "senhaAtualPrioritaria" | "prefixoNormal" | "prefixoPrioritaria" | "updatedAt", ExtArgs["result"]["configuracao"]>
+  export type ConfiguracaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senhaAtualNormal" | "senhaAtualPrioritaria" | "senhaAtualResposta" | "senhaAtualRespostaPrioritaria" | "prefixoNormal" | "prefixoPrioritaria" | "prefixoResposta" | "prefixoRespostaPrioritaria" | "updatedAt", ExtArgs["result"]["configuracao"]>
 
   export type $ConfiguracaoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Configuracao"
@@ -4644,8 +4709,12 @@ export namespace Prisma {
       id: number
       senhaAtualNormal: number
       senhaAtualPrioritaria: number
+      senhaAtualResposta: number
+      senhaAtualRespostaPrioritaria: number
       prefixoNormal: string
       prefixoPrioritaria: string
+      prefixoResposta: string
+      prefixoRespostaPrioritaria: string
       updatedAt: Date
     }, ExtArgs["result"]["configuracao"]>
     composites: {}
@@ -5073,8 +5142,12 @@ export namespace Prisma {
     readonly id: FieldRef<"Configuracao", 'Int'>
     readonly senhaAtualNormal: FieldRef<"Configuracao", 'Int'>
     readonly senhaAtualPrioritaria: FieldRef<"Configuracao", 'Int'>
+    readonly senhaAtualResposta: FieldRef<"Configuracao", 'Int'>
+    readonly senhaAtualRespostaPrioritaria: FieldRef<"Configuracao", 'Int'>
     readonly prefixoNormal: FieldRef<"Configuracao", 'String'>
     readonly prefixoPrioritaria: FieldRef<"Configuracao", 'String'>
+    readonly prefixoResposta: FieldRef<"Configuracao", 'String'>
+    readonly prefixoRespostaPrioritaria: FieldRef<"Configuracao", 'String'>
     readonly updatedAt: FieldRef<"Configuracao", 'DateTime'>
   }
     
@@ -5484,6 +5557,7 @@ export namespace Prisma {
     guiche: 'guiche',
     horario: 'horario',
     isPrioritaria: 'isPrioritaria',
+    tipoSenha: 'tipoSenha',
     status: 'status',
     horarioInicio: 'horarioInicio',
     horarioFim: 'horarioFim',
@@ -5497,8 +5571,12 @@ export namespace Prisma {
     id: 'id',
     senhaAtualNormal: 'senhaAtualNormal',
     senhaAtualPrioritaria: 'senhaAtualPrioritaria',
+    senhaAtualResposta: 'senhaAtualResposta',
+    senhaAtualRespostaPrioritaria: 'senhaAtualRespostaPrioritaria',
     prefixoNormal: 'prefixoNormal',
     prefixoPrioritaria: 'prefixoPrioritaria',
+    prefixoResposta: 'prefixoResposta',
+    prefixoRespostaPrioritaria: 'prefixoRespostaPrioritaria',
     updatedAt: 'updatedAt'
   };
 
@@ -5719,6 +5797,7 @@ export namespace Prisma {
     guiche?: StringFilter<"SenhaChamada"> | string
     horario?: DateTimeFilter<"SenhaChamada"> | Date | string
     isPrioritaria?: BoolFilter<"SenhaChamada"> | boolean
+    tipoSenha?: StringFilter<"SenhaChamada"> | string
     status?: StringFilter<"SenhaChamada"> | string
     horarioInicio?: DateTimeNullableFilter<"SenhaChamada"> | Date | string | null
     horarioFim?: DateTimeNullableFilter<"SenhaChamada"> | Date | string | null
@@ -5731,6 +5810,7 @@ export namespace Prisma {
     guiche?: SortOrder
     horario?: SortOrder
     isPrioritaria?: SortOrder
+    tipoSenha?: SortOrder
     status?: SortOrder
     horarioInicio?: SortOrderInput | SortOrder
     horarioFim?: SortOrderInput | SortOrder
@@ -5746,6 +5826,7 @@ export namespace Prisma {
     guiche?: StringFilter<"SenhaChamada"> | string
     horario?: DateTimeFilter<"SenhaChamada"> | Date | string
     isPrioritaria?: BoolFilter<"SenhaChamada"> | boolean
+    tipoSenha?: StringFilter<"SenhaChamada"> | string
     status?: StringFilter<"SenhaChamada"> | string
     horarioInicio?: DateTimeNullableFilter<"SenhaChamada"> | Date | string | null
     horarioFim?: DateTimeNullableFilter<"SenhaChamada"> | Date | string | null
@@ -5758,6 +5839,7 @@ export namespace Prisma {
     guiche?: SortOrder
     horario?: SortOrder
     isPrioritaria?: SortOrder
+    tipoSenha?: SortOrder
     status?: SortOrder
     horarioInicio?: SortOrderInput | SortOrder
     horarioFim?: SortOrderInput | SortOrder
@@ -5778,6 +5860,7 @@ export namespace Prisma {
     guiche?: StringWithAggregatesFilter<"SenhaChamada"> | string
     horario?: DateTimeWithAggregatesFilter<"SenhaChamada"> | Date | string
     isPrioritaria?: BoolWithAggregatesFilter<"SenhaChamada"> | boolean
+    tipoSenha?: StringWithAggregatesFilter<"SenhaChamada"> | string
     status?: StringWithAggregatesFilter<"SenhaChamada"> | string
     horarioInicio?: DateTimeNullableWithAggregatesFilter<"SenhaChamada"> | Date | string | null
     horarioFim?: DateTimeNullableWithAggregatesFilter<"SenhaChamada"> | Date | string | null
@@ -5791,8 +5874,12 @@ export namespace Prisma {
     id?: IntFilter<"Configuracao"> | number
     senhaAtualNormal?: IntFilter<"Configuracao"> | number
     senhaAtualPrioritaria?: IntFilter<"Configuracao"> | number
+    senhaAtualResposta?: IntFilter<"Configuracao"> | number
+    senhaAtualRespostaPrioritaria?: IntFilter<"Configuracao"> | number
     prefixoNormal?: StringFilter<"Configuracao"> | string
     prefixoPrioritaria?: StringFilter<"Configuracao"> | string
+    prefixoResposta?: StringFilter<"Configuracao"> | string
+    prefixoRespostaPrioritaria?: StringFilter<"Configuracao"> | string
     updatedAt?: DateTimeFilter<"Configuracao"> | Date | string
   }
 
@@ -5800,8 +5887,12 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
     prefixoNormal?: SortOrder
     prefixoPrioritaria?: SortOrder
+    prefixoResposta?: SortOrder
+    prefixoRespostaPrioritaria?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -5812,8 +5903,12 @@ export namespace Prisma {
     NOT?: ConfiguracaoWhereInput | ConfiguracaoWhereInput[]
     senhaAtualNormal?: IntFilter<"Configuracao"> | number
     senhaAtualPrioritaria?: IntFilter<"Configuracao"> | number
+    senhaAtualResposta?: IntFilter<"Configuracao"> | number
+    senhaAtualRespostaPrioritaria?: IntFilter<"Configuracao"> | number
     prefixoNormal?: StringFilter<"Configuracao"> | string
     prefixoPrioritaria?: StringFilter<"Configuracao"> | string
+    prefixoResposta?: StringFilter<"Configuracao"> | string
+    prefixoRespostaPrioritaria?: StringFilter<"Configuracao"> | string
     updatedAt?: DateTimeFilter<"Configuracao"> | Date | string
   }, "id">
 
@@ -5821,8 +5916,12 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
     prefixoNormal?: SortOrder
     prefixoPrioritaria?: SortOrder
+    prefixoResposta?: SortOrder
+    prefixoRespostaPrioritaria?: SortOrder
     updatedAt?: SortOrder
     _count?: ConfiguracaoCountOrderByAggregateInput
     _avg?: ConfiguracaoAvgOrderByAggregateInput
@@ -5838,8 +5937,12 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Configuracao"> | number
     senhaAtualNormal?: IntWithAggregatesFilter<"Configuracao"> | number
     senhaAtualPrioritaria?: IntWithAggregatesFilter<"Configuracao"> | number
+    senhaAtualResposta?: IntWithAggregatesFilter<"Configuracao"> | number
+    senhaAtualRespostaPrioritaria?: IntWithAggregatesFilter<"Configuracao"> | number
     prefixoNormal?: StringWithAggregatesFilter<"Configuracao"> | string
     prefixoPrioritaria?: StringWithAggregatesFilter<"Configuracao"> | string
+    prefixoResposta?: StringWithAggregatesFilter<"Configuracao"> | string
+    prefixoRespostaPrioritaria?: StringWithAggregatesFilter<"Configuracao"> | string
     updatedAt?: DateTimeWithAggregatesFilter<"Configuracao"> | Date | string
   }
 
@@ -5963,6 +6066,7 @@ export namespace Prisma {
     guiche: string
     horario: Date | string
     isPrioritaria: boolean
+    tipoSenha?: string
     status?: string
     horarioInicio?: Date | string | null
     horarioFim?: Date | string | null
@@ -5975,6 +6079,7 @@ export namespace Prisma {
     guiche: string
     horario: Date | string
     isPrioritaria: boolean
+    tipoSenha?: string
     status?: string
     horarioInicio?: Date | string | null
     horarioFim?: Date | string | null
@@ -5986,6 +6091,7 @@ export namespace Prisma {
     guiche?: StringFieldUpdateOperationsInput | string
     horario?: DateTimeFieldUpdateOperationsInput | Date | string
     isPrioritaria?: BoolFieldUpdateOperationsInput | boolean
+    tipoSenha?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     horarioInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     horarioFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5998,6 +6104,7 @@ export namespace Prisma {
     guiche?: StringFieldUpdateOperationsInput | string
     horario?: DateTimeFieldUpdateOperationsInput | Date | string
     isPrioritaria?: BoolFieldUpdateOperationsInput | boolean
+    tipoSenha?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     horarioInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     horarioFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6010,6 +6117,7 @@ export namespace Prisma {
     guiche: string
     horario: Date | string
     isPrioritaria: boolean
+    tipoSenha?: string
     status?: string
     horarioInicio?: Date | string | null
     horarioFim?: Date | string | null
@@ -6021,6 +6129,7 @@ export namespace Prisma {
     guiche?: StringFieldUpdateOperationsInput | string
     horario?: DateTimeFieldUpdateOperationsInput | Date | string
     isPrioritaria?: BoolFieldUpdateOperationsInput | boolean
+    tipoSenha?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     horarioInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     horarioFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6033,6 +6142,7 @@ export namespace Prisma {
     guiche?: StringFieldUpdateOperationsInput | string
     horario?: DateTimeFieldUpdateOperationsInput | Date | string
     isPrioritaria?: BoolFieldUpdateOperationsInput | boolean
+    tipoSenha?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     horarioInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     horarioFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6043,8 +6153,12 @@ export namespace Prisma {
     id?: number
     senhaAtualNormal?: number
     senhaAtualPrioritaria?: number
+    senhaAtualResposta?: number
+    senhaAtualRespostaPrioritaria?: number
     prefixoNormal?: string
     prefixoPrioritaria?: string
+    prefixoResposta?: string
+    prefixoRespostaPrioritaria?: string
     updatedAt?: Date | string
   }
 
@@ -6052,8 +6166,12 @@ export namespace Prisma {
     id?: number
     senhaAtualNormal?: number
     senhaAtualPrioritaria?: number
+    senhaAtualResposta?: number
+    senhaAtualRespostaPrioritaria?: number
     prefixoNormal?: string
     prefixoPrioritaria?: string
+    prefixoResposta?: string
+    prefixoRespostaPrioritaria?: string
     updatedAt?: Date | string
   }
 
@@ -6061,8 +6179,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     senhaAtualNormal?: IntFieldUpdateOperationsInput | number
     senhaAtualPrioritaria?: IntFieldUpdateOperationsInput | number
+    senhaAtualResposta?: IntFieldUpdateOperationsInput | number
+    senhaAtualRespostaPrioritaria?: IntFieldUpdateOperationsInput | number
     prefixoNormal?: StringFieldUpdateOperationsInput | string
     prefixoPrioritaria?: StringFieldUpdateOperationsInput | string
+    prefixoResposta?: StringFieldUpdateOperationsInput | string
+    prefixoRespostaPrioritaria?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6070,8 +6192,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     senhaAtualNormal?: IntFieldUpdateOperationsInput | number
     senhaAtualPrioritaria?: IntFieldUpdateOperationsInput | number
+    senhaAtualResposta?: IntFieldUpdateOperationsInput | number
+    senhaAtualRespostaPrioritaria?: IntFieldUpdateOperationsInput | number
     prefixoNormal?: StringFieldUpdateOperationsInput | string
     prefixoPrioritaria?: StringFieldUpdateOperationsInput | string
+    prefixoResposta?: StringFieldUpdateOperationsInput | string
+    prefixoRespostaPrioritaria?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6079,8 +6205,12 @@ export namespace Prisma {
     id?: number
     senhaAtualNormal?: number
     senhaAtualPrioritaria?: number
+    senhaAtualResposta?: number
+    senhaAtualRespostaPrioritaria?: number
     prefixoNormal?: string
     prefixoPrioritaria?: string
+    prefixoResposta?: string
+    prefixoRespostaPrioritaria?: string
     updatedAt?: Date | string
   }
 
@@ -6088,8 +6218,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     senhaAtualNormal?: IntFieldUpdateOperationsInput | number
     senhaAtualPrioritaria?: IntFieldUpdateOperationsInput | number
+    senhaAtualResposta?: IntFieldUpdateOperationsInput | number
+    senhaAtualRespostaPrioritaria?: IntFieldUpdateOperationsInput | number
     prefixoNormal?: StringFieldUpdateOperationsInput | string
     prefixoPrioritaria?: StringFieldUpdateOperationsInput | string
+    prefixoResposta?: StringFieldUpdateOperationsInput | string
+    prefixoRespostaPrioritaria?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6097,8 +6231,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     senhaAtualNormal?: IntFieldUpdateOperationsInput | number
     senhaAtualPrioritaria?: IntFieldUpdateOperationsInput | number
+    senhaAtualResposta?: IntFieldUpdateOperationsInput | number
+    senhaAtualRespostaPrioritaria?: IntFieldUpdateOperationsInput | number
     prefixoNormal?: StringFieldUpdateOperationsInput | string
     prefixoPrioritaria?: StringFieldUpdateOperationsInput | string
+    prefixoResposta?: StringFieldUpdateOperationsInput | string
+    prefixoRespostaPrioritaria?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6294,6 +6432,7 @@ export namespace Prisma {
     guiche?: SortOrder
     horario?: SortOrder
     isPrioritaria?: SortOrder
+    tipoSenha?: SortOrder
     status?: SortOrder
     horarioInicio?: SortOrder
     horarioFim?: SortOrder
@@ -6310,6 +6449,7 @@ export namespace Prisma {
     guiche?: SortOrder
     horario?: SortOrder
     isPrioritaria?: SortOrder
+    tipoSenha?: SortOrder
     status?: SortOrder
     horarioInicio?: SortOrder
     horarioFim?: SortOrder
@@ -6322,6 +6462,7 @@ export namespace Prisma {
     guiche?: SortOrder
     horario?: SortOrder
     isPrioritaria?: SortOrder
+    tipoSenha?: SortOrder
     status?: SortOrder
     horarioInicio?: SortOrder
     horarioFim?: SortOrder
@@ -6374,8 +6515,12 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
     prefixoNormal?: SortOrder
     prefixoPrioritaria?: SortOrder
+    prefixoResposta?: SortOrder
+    prefixoRespostaPrioritaria?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6383,14 +6528,20 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
   }
 
   export type ConfiguracaoMaxOrderByAggregateInput = {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
     prefixoNormal?: SortOrder
     prefixoPrioritaria?: SortOrder
+    prefixoResposta?: SortOrder
+    prefixoRespostaPrioritaria?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6398,8 +6549,12 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
     prefixoNormal?: SortOrder
     prefixoPrioritaria?: SortOrder
+    prefixoResposta?: SortOrder
+    prefixoRespostaPrioritaria?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6407,6 +6562,8 @@ export namespace Prisma {
     id?: SortOrder
     senhaAtualNormal?: SortOrder
     senhaAtualPrioritaria?: SortOrder
+    senhaAtualResposta?: SortOrder
+    senhaAtualRespostaPrioritaria?: SortOrder
   }
 
   export type GuicheCreateNestedOneWithoutUsuariosInput = {

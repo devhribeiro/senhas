@@ -115,6 +115,7 @@ exports.Prisma.SenhaChamadaScalarFieldEnum = {
   guiche: 'guiche',
   horario: 'horario',
   isPrioritaria: 'isPrioritaria',
+  tipoSenha: 'tipoSenha',
   status: 'status',
   horarioInicio: 'horarioInicio',
   horarioFim: 'horarioFim',
@@ -125,8 +126,12 @@ exports.Prisma.ConfiguracaoScalarFieldEnum = {
   id: 'id',
   senhaAtualNormal: 'senhaAtualNormal',
   senhaAtualPrioritaria: 'senhaAtualPrioritaria',
+  senhaAtualResposta: 'senhaAtualResposta',
+  senhaAtualRespostaPrioritaria: 'senhaAtualRespostaPrioritaria',
   prefixoNormal: 'prefixoNormal',
   prefixoPrioritaria: 'prefixoPrioritaria',
+  prefixoResposta: 'prefixoResposta',
+  prefixoRespostaPrioritaria: 'prefixoRespostaPrioritaria',
   updatedAt: 'updatedAt'
 };
 
@@ -163,7 +168,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\User\\Desktop\\projects\\private\\senhas\\senhas\\app\\generated-prisma-client",
+      "value": "c:\\Users\\User\\Desktop\\projects\\private\\senhas\\senhas\\app\\generated-prisma-client",
       "fromEnvVar": null
     },
     "config": {
@@ -177,7 +182,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\User\\Desktop\\projects\\private\\senhas\\senhas\\prisma\\schema.prisma",
+    "sourceFilePath": "c:\\Users\\User\\Desktop\\projects\\private\\senhas\\senhas\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -199,13 +204,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// Define database connection via the `DATABASE_URL` env var\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated-prisma-client\"\n}\n\n// Modelo de usuários\nmodel Usuario {\n  id        String   @id\n  username  String   @unique\n  password  String\n  guicheId  String?\n  guiche    Guiche?  @relation(fields: [guicheId], references: [id])\n  createdAt DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"usuarios\")\n}\n\n// Modelo de guichês\nmodel Guiche {\n  id        String    @id\n  numero    String\n  nome      String\n  usuarioId String?\n  usuarios  Usuario[]\n  createdAt DateTime  @default(now()) @map(\"created_at\")\n\n  @@map(\"guiches\")\n}\n\n// Modelo de senhas chamadas\nmodel SenhaChamada {\n  id            Int       @id @default(autoincrement())\n  senha         String\n  guiche        String\n  horario       DateTime\n  isPrioritaria Boolean\n  status        String    @default(\"chamada\")\n  horarioInicio DateTime?\n  horarioFim    DateTime?\n  createdAt     DateTime  @default(now()) @map(\"created_at\")\n\n  @@map(\"senhas_chamadas\")\n}\n\n// Modelo de configuração\nmodel Configuracao {\n  id                    Int      @id @default(1)\n  senhaAtualNormal      Int      @default(1)\n  senhaAtualPrioritaria Int      @default(1)\n  prefixoNormal         String   @default(\"N\")\n  prefixoPrioritaria    String   @default(\"P\")\n  updatedAt             DateTime @default(now()) @updatedAt @map(\"updated_at\")\n\n  @@map(\"configuracao\")\n}\n",
-  "inlineSchemaHash": "15efd0b9491c087723e74fe45786e9116f74eb1f1faa9f38222de4c83b87552a",
+  "inlineSchema": "// Define database connection via the `DATABASE_URL` env var\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated-prisma-client\"\n}\n\n// Modelo de usuários\nmodel Usuario {\n  id        String   @id\n  username  String   @unique\n  password  String\n  guicheId  String?\n  guiche    Guiche?  @relation(fields: [guicheId], references: [id])\n  createdAt DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"usuarios\")\n}\n\n// Modelo de guichês\nmodel Guiche {\n  id        String    @id\n  numero    String\n  nome      String\n  usuarioId String?\n  usuarios  Usuario[]\n  createdAt DateTime  @default(now()) @map(\"created_at\")\n\n  @@map(\"guiches\")\n}\n\n// Modelo de senhas chamadas\nmodel SenhaChamada {\n  id            Int       @id @default(autoincrement())\n  senha         String\n  guiche        String\n  horario       DateTime\n  isPrioritaria Boolean\n  tipoSenha     String    @default(\"N\") // N = Normal, P = Prioritária, R = Resposta, RP = Resposta Prioritária\n  status        String    @default(\"chamada\")\n  horarioInicio DateTime?\n  horarioFim    DateTime?\n  createdAt     DateTime  @default(now()) @map(\"created_at\")\n\n  @@map(\"senhas_chamadas\")\n}\n\n// Modelo de configuração\nmodel Configuracao {\n  id                            Int      @id @default(1)\n  senhaAtualNormal              Int      @default(1)\n  senhaAtualPrioritaria         Int      @default(1)\n  senhaAtualResposta            Int      @default(1)\n  senhaAtualRespostaPrioritaria Int      @default(1)\n  prefixoNormal                 String   @default(\"N\")\n  prefixoPrioritaria            String   @default(\"P\")\n  prefixoResposta               String   @default(\"R\")\n  prefixoRespostaPrioritaria    String   @default(\"RP\")\n  updatedAt                     DateTime @default(now()) @updatedAt @map(\"updated_at\")\n\n  @@map(\"configuracao\")\n}\n",
+  "inlineSchemaHash": "3d24bbfa970af8e739c99895a0548dc51fb8b62859f5936be3436dd4ceb39f7c",
   "copyEngine": false
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Usuario\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guicheId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guiche\",\"kind\":\"object\",\"type\":\"Guiche\",\"relationName\":\"GuicheToUsuario\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"usuarios\"},\"Guiche\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"numero\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nome\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usuarioId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usuarios\",\"kind\":\"object\",\"type\":\"Usuario\",\"relationName\":\"GuicheToUsuario\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"guiches\"},\"SenhaChamada\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senha\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guiche\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"horario\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isPrioritaria\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"horarioInicio\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"horarioFim\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"senhas_chamadas\"},\"Configuracao\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualNormal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualPrioritaria\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"prefixoNormal\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prefixoPrioritaria\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"}],\"dbName\":\"configuracao\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Usuario\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guicheId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guiche\",\"kind\":\"object\",\"type\":\"Guiche\",\"relationName\":\"GuicheToUsuario\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"usuarios\"},\"Guiche\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"numero\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nome\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usuarioId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usuarios\",\"kind\":\"object\",\"type\":\"Usuario\",\"relationName\":\"GuicheToUsuario\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"guiches\"},\"SenhaChamada\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senha\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guiche\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"horario\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isPrioritaria\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"tipoSenha\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"horarioInicio\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"horarioFim\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"senhas_chamadas\"},\"Configuracao\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualNormal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualPrioritaria\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualResposta\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"senhaAtualRespostaPrioritaria\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"prefixoNormal\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prefixoPrioritaria\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prefixoResposta\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"prefixoRespostaPrioritaria\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"}],\"dbName\":\"configuracao\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = undefined
 config.compilerWasm = undefined

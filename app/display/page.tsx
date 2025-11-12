@@ -317,16 +317,37 @@ export default function Display() {
               <p className="text-[18rem] leading-none font-black text-white drop-shadow-2xl mb-4">
                 {senhaAtual.senha}
               </p>
-              {senhaAtual.isPrioritaria && (
+              {/* Badge para cada tipo de senha */}
+              {senhaAtual.tipoSenha === 'N' && (
+                <div className="inline-flex items-center bg-blue-500 text-white px-8 py-4 rounded-full text-3xl font-bold mb-4 shadow-2xl">
+                  <svg className="w-10 h-10 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  NORMAL
+                </div>
+              )}
+              {senhaAtual.tipoSenha === 'P' && (
                 <div className="inline-flex items-center bg-orange-500 text-white px-8 py-4 rounded-full text-3xl font-bold mb-4 shadow-2xl">
-                  <svg
-                    className="w-10 h-10 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-10 h-10 mr-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                   PRIORITÁRIA
+                </div>
+              )}
+              {senhaAtual.tipoSenha === 'R' && (
+                <div className="inline-flex items-center bg-green-500 text-white px-8 py-4 rounded-full text-3xl font-bold mb-4 shadow-2xl">
+                  <svg className="w-10 h-10 mr-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                  RESPOSTA
+                </div>
+              )}
+              {senhaAtual.tipoSenha === 'RP' && (
+                <div className="inline-flex items-center bg-purple-500 text-white px-8 py-4 rounded-full text-3xl font-bold mb-4 shadow-2xl">
+                  <svg className="w-10 h-10 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                  RESPOSTA PRIORITÁRIA
                 </div>
               )}
             </div>
@@ -363,43 +384,66 @@ export default function Display() {
           <p className="text-center text-gray-400 py-4">Nenhuma senha anterior</p>
         ) : (
           <div className="grid grid-cols-5 gap-4">
-            {ultimasSenhas.map((senha, index) => (
-              <div
-                key={index}
-                className={`rounded-xl p-4 border-2 transition-all ${
-                  senha.isPrioritaria
-                    ? 'bg-orange-50 border-orange-300'
-                    : 'bg-blue-50 border-blue-300'
-                }`}
-              >
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-gray-800 mb-2">
-                    {senha.senha}
-                  </p>
-                  <p className="text-sm text-gray-600 mb-1">{senha.guiche}</p>
-                  <p className="text-xs text-gray-500">
-                    {new Date(senha.horario).toLocaleTimeString('pt-BR', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                  {senha.isPrioritaria && (
+            {ultimasSenhas.map((senha, index) => {
+              // Definir cores baseadas no tipo de senha
+              let bgColor, borderColor, badgeColor, badgeText;
+              switch (senha.tipoSenha) {
+                case 'N':
+                  bgColor = 'bg-blue-50';
+                  borderColor = 'border-blue-300';
+                  badgeColor = 'bg-blue-500';
+                  badgeText = 'Normal';
+                  break;
+                case 'P':
+                  bgColor = 'bg-orange-50';
+                  borderColor = 'border-orange-300';
+                  badgeColor = 'bg-orange-500';
+                  badgeText = 'Prioritária';
+                  break;
+                case 'R':
+                  bgColor = 'bg-green-50';
+                  borderColor = 'border-green-300';
+                  badgeColor = 'bg-green-500';
+                  badgeText = 'Resposta';
+                  break;
+                case 'RP':
+                  bgColor = 'bg-purple-50';
+                  borderColor = 'border-purple-300';
+                  badgeColor = 'bg-purple-500';
+                  badgeText = 'Resp. Prior.';
+                  break;
+                default:
+                  bgColor = 'bg-gray-50';
+                  borderColor = 'border-gray-300';
+                  badgeColor = 'bg-gray-500';
+                  badgeText = 'Normal';
+              }
+
+              return (
+                <div
+                  key={index}
+                  className={`rounded-xl p-4 border-2 transition-all ${bgColor} ${borderColor}`}
+                >
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-gray-800 mb-2">
+                      {senha.senha}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-1">{senha.guiche}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(senha.horario).toLocaleTimeString('pt-BR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
                     <div className="mt-2">
-                      <span className="inline-flex items-center bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                        <svg
-                          className="w-3 h-3 mr-1"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                        Prioritária
+                      <span className={`inline-flex items-center ${badgeColor} text-white px-2 py-1 rounded text-xs font-semibold`}>
+                        {badgeText}
                       </span>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
