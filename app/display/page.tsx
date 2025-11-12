@@ -15,24 +15,6 @@ export default function Display() {
   useEffect(() => {
     loadSenhas();
 
-    // Tentar inicializar áudio automaticamente
-    const inicializarAudio = async () => {
-      try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        // Tentar resumir o contexto de áudio
-        if (ctx.state === 'suspended') {
-          await ctx.resume();
-        }
-        setAudioContext(ctx);
-        setAudioHabilitado(true);
-        console.log('Áudio inicializado automaticamente');
-      } catch (error) {
-        console.log('Não foi possível inicializar áudio automaticamente:', error);
-      }
-    };
-
-    inicializarAudio();
-
     // Atualizar a cada 2 segundos
     const interval = setInterval(loadSenhas, 2000);
 
@@ -59,29 +41,42 @@ export default function Display() {
       loadSenhas();
     };
 
-    // Habilitar áudio no primeiro clique/toque como fallback
-    const habilitarAudioManual = async () => {
-      if (!audioHabilitado && audioContext) {
-        if (audioContext.state === 'suspended') {
-          await audioContext.resume();
-        }
-        setAudioHabilitado(true);
-        console.log('Áudio habilitado manualmente');
-      }
-    };
-
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('click', habilitarAudioManual, { once: true });
-    window.addEventListener('touchstart', habilitarAudioManual, { once: true });
 
     return () => {
       clearInterval(interval);
       clearInterval(intervalRelogio);
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('click', habilitarAudioManual);
-      window.removeEventListener('touchstart', habilitarAudioManual);
     };
   }, []);
+
+  const habilitarAudio = async () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (ctx.state === 'suspended') {
+        await ctx.resume();
+      }
+      setAudioContext(ctx);
+      setAudioHabilitado(true);
+
+      // Tocar um teste de som para confirmar
+      const testOsc = ctx.createOscillator();
+      const testGain = ctx.createGain();
+      testOsc.connect(testGain);
+      testGain.connect(ctx.destination);
+      testOsc.frequency.value = 659.25;
+      testOsc.type = 'sine';
+      const now = ctx.currentTime;
+      testGain.gain.setValueAtTime(0, now);
+      testGain.gain.linearRampToValueAtTime(0.5, now + 0.05);
+      testGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      testOsc.start(now);
+      testOsc.stop(now + 0.3);
+    } catch (error) {
+      console.error('Erro ao habilitar áudio:', error);
+      alert('Erro ao habilitar o áudio. Por favor, recarregue a página.');
+    }
+  };
 
   const loadSenhas = async () => {
     try {
@@ -205,6 +200,41 @@ export default function Display() {
 
   return (
     <div className="h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col overflow-hidden">
+      {/* Overlay para habilitar áudio */}
+      {!audioHabilitado && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md text-center">
+            <div className="mb-6">
+              <svg
+                className="w-24 h-24 mx-auto text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Ativar Áudio do Sistema
+            </h2>
+            <p className="text-gray-600 mb-8 text-lg">
+              Clique no botão abaixo para ativar os anúncios de senha por voz
+            </p>
+            <button
+              onClick={habilitarAudio}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-8 rounded-xl font-bold text-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Ativar Áudio
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Cabeçalho com Data, Nome e Hora */}
       <div className="flex items-center justify-between px-8 py-6 flex-shrink-0">
         {/* Data - Esquerda */}
