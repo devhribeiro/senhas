@@ -54,18 +54,24 @@ export default function Display() {
       const senhas = await api.getSenhas();
 
       if (senhas.length > 0) {
-        const novaSenha = senhas[senhas.length - 1];
+        // Filtrar apenas senhas chamadas (status "chamada")
+        const senhasChamadas = senhas.filter(s => s.status === 'chamada');
 
-        // Se mudou a senha, tocar som
-        if (senhaAtual && novaSenha.senha !== senhaAtual.senha) {
-          tocarSom(novaSenha.senha);
+        if (senhasChamadas.length > 0) {
+          // Pegar a senha chamada mais recente (última do array filtrado)
+          const novaSenha = senhasChamadas[senhasChamadas.length - 1];
+
+          // Se mudou a senha, tocar som
+          if (senhaAtual && novaSenha.senha !== senhaAtual.senha) {
+            tocarSom(novaSenha.senha);
+          }
+
+          setSenhaAtual(novaSenha);
+
+          // Pegar as últimas 5 senhas chamadas (excluindo a atual)
+          const ultimas = senhasChamadas.slice(-6, -1).reverse();
+          setUltimasSenhas(ultimas);
         }
-
-        setSenhaAtual(novaSenha);
-
-        // Pegar as últimas 5 senhas (excluindo a atual)
-        const ultimas = senhas.slice(-6, -1).reverse();
-        setUltimasSenhas(ultimas);
       }
     } catch (error) {
       console.error('Erro ao carregar senhas:', error);
