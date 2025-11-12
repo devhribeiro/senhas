@@ -172,14 +172,17 @@ export default function Display() {
       if ('speechSynthesis' in window) {
         // Extrair apenas o número do guichê (ex: "Guichê 1" -> "1")
         const numeroGuiche = senha.guiche.replace(/[^0-9]/g, '');
-        // Formato: "Senha N003 Guichê 1"
-        const mensagem = `Senha ${senha.senha} Guichê ${numeroGuiche}`;
+        // Formato com pausas: "Senha N003, Guichê 1"
+        // Adicionar vírgula para criar uma pausa natural
+        const mensagem = `Senha ${senha.senha}, Guichê ${numeroGuiche}`;
 
         console.log('🗣️ Falando:', mensagem);
+        console.log('🔢 Número do guichê extraído:', numeroGuiche);
+        console.log('📝 Guichê original:', senha.guiche);
 
         const utterance = new SpeechSynthesisUtterance(mensagem);
         utterance.lang = 'pt-BR';
-        utterance.rate = 0.9;
+        utterance.rate = 0.85; // Mais devagar para melhor compreensão
         utterance.pitch = 1;
         utterance.volume = 1;
 
