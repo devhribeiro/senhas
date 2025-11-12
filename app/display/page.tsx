@@ -181,18 +181,18 @@ export default function Display() {
       </div>
 
       {/* Senha Atual - Centro */}
-      <div className="flex-1 flex items-center justify-center px-8">
+      <div className="flex-1 flex items-center justify-center px-8 overflow-hidden">
         {senhaAtual ? (
           <div className="text-center">
-            <p className="text-4xl text-white/80 mb-8">Senha Chamada</p>
-            <div className="mb-8">
-              <p className="text-[24rem] leading-none font-black text-white drop-shadow-2xl mb-8">
+            <p className="text-3xl text-white/80 mb-4">Senha Chamada</p>
+            <div className="mb-4">
+              <p className="text-[18rem] leading-none font-black text-white drop-shadow-2xl mb-4">
                 {senhaAtual.senha}
               </p>
               {senhaAtual.isPrioritaria && (
-                <div className="inline-flex items-center bg-orange-500 text-white px-10 py-5 rounded-full text-4xl font-bold mb-8 shadow-2xl">
+                <div className="inline-flex items-center bg-orange-500 text-white px-8 py-4 rounded-full text-3xl font-bold mb-4 shadow-2xl">
                   <svg
-                    className="w-12 h-12 mr-3"
+                    className="w-10 h-10 mr-3"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -202,9 +202,9 @@ export default function Display() {
                 </div>
               )}
             </div>
-            <div className="flex items-center justify-center space-x-4 text-6xl">
+            <div className="flex items-center justify-center space-x-4 text-5xl">
               <svg
-                className="w-20 h-20 text-white"
+                className="w-16 h-16 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -221,7 +221,7 @@ export default function Display() {
           </div>
         ) : (
           <div className="text-center">
-            <p className="text-7xl text-white/60">Aguardando primeira senha...</p>
+            <p className="text-6xl text-white/60">Aguardando primeira senha...</p>
           </div>
         )}
       </div>
