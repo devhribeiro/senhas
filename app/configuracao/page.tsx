@@ -193,14 +193,14 @@ export default function Configuracao() {
                       placeholder="Número do Guichê"
                       value={novoGuiche.numero}
                       onChange={(e) => setNovoGuiche({ ...novoGuiche, numero: e.target.value })}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                     <input
                       type="text"
                       placeholder="Nome do Guichê"
                       value={novoGuiche.nome}
                       onChange={(e) => setNovoGuiche({ ...novoGuiche, nome: e.target.value })}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                     <button
                       onClick={adicionarGuiche}
@@ -246,19 +246,19 @@ export default function Configuracao() {
                       placeholder="Nome de usuário"
                       value={novoUsuario.username}
                       onChange={(e) => setNovoUsuario({ ...novoUsuario, username: e.target.value })}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                     <input
                       type="password"
                       placeholder="Senha"
                       value={novoUsuario.password}
                       onChange={(e) => setNovoUsuario({ ...novoUsuario, password: e.target.value })}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                     <select
                       value={novoUsuario.guicheId}
                       onChange={(e) => setNovoUsuario({ ...novoUsuario, guicheId: e.target.value })}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
                       <option value="">Sem guichê</option>
                       {guiches.map((guiche) => (
@@ -288,7 +288,7 @@ export default function Configuracao() {
                             <select
                               value={usuario.guicheId || ''}
                               onChange={(e) => vincularUsuarioAoGuiche(usuario.id, e.target.value)}
-                              className="text-sm px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="text-sm px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                             >
                               <option value="">Sem guichê</option>
                               {guiches.map((guiche) => (
@@ -329,7 +329,7 @@ export default function Configuracao() {
                         maxLength={1}
                         value={configuracao.prefixoNormal}
                         onChange={(e) => setConfiguracao({ ...configuracao, prefixoNormal: e.target.value.toUpperCase() })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
                       />
                     </div>
                     <div>
@@ -339,7 +339,7 @@ export default function Configuracao() {
                         maxLength={1}
                         value={configuracao.prefixoPrioritaria}
                         onChange={(e) => setConfiguracao({ ...configuracao, prefixoPrioritaria: e.target.value.toUpperCase() })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900"
                       />
                     </div>
                   </div>
@@ -355,7 +355,7 @@ export default function Configuracao() {
                         min="1"
                         value={configuracao.senhaAtualNormal}
                         onChange={(e) => setConfiguracao({ ...configuracao, senhaAtualNormal: parseInt(e.target.value) || 1 })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       />
                     </div>
                     <div>
@@ -365,7 +365,7 @@ export default function Configuracao() {
                         min="1"
                         value={configuracao.senhaAtualPrioritaria}
                         onChange={(e) => setConfiguracao({ ...configuracao, senhaAtualPrioritaria: parseInt(e.target.value) || 1 })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       />
                     </div>
                   </div>
