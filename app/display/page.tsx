@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { SenhaChamada } from '../types';
 import { api } from '@/lib/api';
 
@@ -11,6 +11,11 @@ export default function Display() {
   const [audioHabilitado, setAudioHabilitado] = useState(false);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [ultimaSenhaFalada, setUltimaSenhaFalada] = useState<string>('');
+
+  // Usar refs para ter sempre os valores mais recentes
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioHabilitadoRef = useRef<boolean>(false);
+  const ultimaSenhaFaladaRef = useRef<string>('');
 
   useEffect(() => {
     loadSenhas();
@@ -52,12 +57,22 @@ export default function Display() {
 
   const habilitarAudio = async () => {
     try {
+      console.log('🎛️ Habilitando áudio...');
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       if (ctx.state === 'suspended') {
         await ctx.resume();
       }
+
+      // Atualizar tanto o state quanto o ref
       setAudioContext(ctx);
       setAudioHabilitado(true);
+      audioContextRef.current = ctx;
+      audioHabilitadoRef.current = true;
+
+      console.log('✅ Áudio habilitado! Estado:', {
+        audioHabilitado: true,
+        audioContext: ctx
+      });
 
       // Tocar um teste de som para confirmar
       const testOsc = ctx.createOscillator();
@@ -72,8 +87,9 @@ export default function Display() {
       testGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
       testOsc.start(now);
       testOsc.stop(now + 0.3);
+      console.log('🔊 Som de teste tocado');
     } catch (error) {
-      console.error('Erro ao habilitar áudio:', error);
+      console.error('❌ Erro ao habilitar áudio:', error);
       alert('Erro ao habilitar o áudio. Por favor, recarregue a página.');
     }
   };
@@ -101,9 +117,10 @@ export default function Display() {
           setSenhaAtual(novaSenha);
 
           // Mas só tocar o som se for uma senha NOVA (diferente da última falada)
-          if (identificadorNovaSenha !== ultimaSenhaFalada) {
+          if (identificadorNovaSenha !== ultimaSenhaFaladaRef.current) {
             console.log('🆕 Nova senha detectada! Chamando tocarSom...');
             setUltimaSenhaFalada(identificadorNovaSenha);
+            ultimaSenhaFaladaRef.current = identificadorNovaSenha;
             tocarSom(novaSenha);
           } else {
             console.log('⏭️ Senha já foi falada, ignorando...');
@@ -125,12 +142,15 @@ export default function Display() {
 
   const tocarSom = (senha: SenhaChamada) => {
     console.log('=== tocarSom chamado ===');
-    console.log('audioHabilitado:', audioHabilitado);
-    console.log('audioContext:', audioContext);
+    console.log('audioHabilitado (state):', audioHabilitado);
+    console.log('audioHabilitado (ref):', audioHabilitadoRef.current);
+    console.log('audioContext (state):', audioContext);
+    console.log('audioContext (ref):', audioContextRef.current);
     console.log('senha:', senha);
 
-    if (!audioHabilitado || !audioContext) {
-      console.log('❌ Áudio não habilitado ou contexto não existe');
+    // Usar as refs ao invés dos states
+    if (!audioHabilitadoRef.current || !audioContextRef.current) {
+      console.log('❌ Áudio não habilitado ou contexto não existe (via ref)');
       return;
     }
 
@@ -175,25 +195,28 @@ export default function Display() {
   };
 
   const tocarBeep = () => {
-    console.log('🔔 tocarBeep chamado, audioContext:', audioContext);
-    if (!audioContext) {
-      console.log('❌ audioContext não existe');
+    console.log('🔔 tocarBeep chamado');
+    console.log('audioContext (ref):', audioContextRef.current);
+
+    const ctx = audioContextRef.current;
+    if (!ctx) {
+      console.log('❌ audioContext não existe (via ref)');
       return;
     }
 
     try {
       console.log('🎵 Criando osciladores...');
       // "DING" - som mais agudo (E - 659.25 Hz)
-      const dingOscillator = audioContext.createOscillator();
-      const dingGain = audioContext.createGain();
+      const dingOscillator = ctx.createOscillator();
+      const dingGain = ctx.createGain();
 
       dingOscillator.connect(dingGain);
-      dingGain.connect(audioContext.destination);
+      dingGain.connect(ctx.destination);
 
       dingOscillator.frequency.value = 659.25; // Nota E
       dingOscillator.type = 'sine';
 
-      const now = audioContext.currentTime;
+      const now = ctx.currentTime;
       dingGain.gain.setValueAtTime(0, now);
       dingGain.gain.linearRampToValueAtTime(0.8, now + 0.05);
       dingGain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
@@ -203,11 +226,11 @@ export default function Display() {
       console.log('✅ DING iniciado');
 
       // "DONG" - som mais grave (C - 523.25 Hz) - começa 0.5s depois
-      const dongOscillator = audioContext.createOscillator();
-      const dongGain = audioContext.createGain();
+      const dongOscillator = ctx.createOscillator();
+      const dongGain = ctx.createGain();
 
       dongOscillator.connect(dongGain);
-      dongGain.connect(audioContext.destination);
+      dongGain.connect(ctx.destination);
 
       dongOscillator.frequency.value = 523.25; // Nota C
       dongOscillator.type = 'sine';
