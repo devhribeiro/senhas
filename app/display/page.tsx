@@ -10,9 +10,28 @@ export default function Display() {
   const [dataHora, setDataHora] = useState({ data: '', hora: '' });
   const [audioHabilitado, setAudioHabilitado] = useState(false);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [ultimaSenhaFalada, setUltimaSenhaFalada] = useState<string>('');
 
   useEffect(() => {
     loadSenhas();
+
+    // Tentar inicializar áudio automaticamente
+    const inicializarAudio = async () => {
+      try {
+        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        // Tentar resumir o contexto de áudio
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
+        }
+        setAudioContext(ctx);
+        setAudioHabilitado(true);
+        console.log('Áudio inicializado automaticamente');
+      } catch (error) {
+        console.log('Não foi possível inicializar áudio automaticamente:', error);
+      }
+    };
+
+    inicializarAudio();
 
     // Atualizar a cada 2 segundos
     const interval = setInterval(loadSenhas, 2000);
@@ -40,27 +59,29 @@ export default function Display() {
       loadSenhas();
     };
 
-    // Habilitar áudio automaticamente no primeiro clique/toque
-    const habilitarAudioAutomatico = () => {
-      if (!audioHabilitado) {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        setAudioContext(ctx);
+    // Habilitar áudio no primeiro clique/toque como fallback
+    const habilitarAudioManual = async () => {
+      if (!audioHabilitado && audioContext) {
+        if (audioContext.state === 'suspended') {
+          await audioContext.resume();
+        }
         setAudioHabilitado(true);
+        console.log('Áudio habilitado manualmente');
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('click', habilitarAudioAutomatico, { once: true });
-    window.addEventListener('touchstart', habilitarAudioAutomatico, { once: true });
+    window.addEventListener('click', habilitarAudioManual, { once: true });
+    window.addEventListener('touchstart', habilitarAudioManual, { once: true });
 
     return () => {
       clearInterval(interval);
       clearInterval(intervalRelogio);
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('click', habilitarAudioAutomatico);
-      window.removeEventListener('touchstart', habilitarAudioAutomatico);
+      window.removeEventListener('click', habilitarAudioManual);
+      window.removeEventListener('touchstart', habilitarAudioManual);
     };
-  }, [audioHabilitado]);
+  }, []);
 
   const loadSenhas = async () => {
     try {
@@ -74,12 +95,21 @@ export default function Display() {
           // Pegar a senha chamada mais recente (primeira do array pois vem DESC)
           const novaSenha = senhasChamadas[0];
 
-          // Se mudou a senha, tocar som
-          if (senhaAtual && novaSenha.senha !== senhaAtual.senha) {
-            tocarSom(novaSenha.senha);
-          }
+          // Criar identificador único combinando senha e horário
+          const identificadorNovaSenha = `${novaSenha.senha}-${novaSenha.horario}`;
 
+          // Atualizar a senha atual sempre
           setSenhaAtual(novaSenha);
+
+          // Mas só tocar o som se for uma senha NOVA (diferente da última falada)
+          if (identificadorNovaSenha !== ultimaSenhaFalada) {
+            console.log('Nova senha detectada, tocando som:', novaSenha.senha);
+            setUltimaSenhaFalada(identificadorNovaSenha);
+            tocarSom(novaSenha);
+          }
+        } else {
+          // Se não há senhas chamadas, limpar a senha atual
+          setSenhaAtual(null);
         }
 
         // Pegar as últimas 5 senhas de TODAS (independente do status)
@@ -91,27 +121,42 @@ export default function Display() {
     }
   };
 
-  const tocarSom = (senha: string) => {
+  const tocarSom = (senha: SenhaChamada) => {
     if (!audioHabilitado || !audioContext) {
-      console.log('Áudio não habilitado ainda. Aguardando interação do usuário.');
+      console.log('Áudio não habilitado, não tocando som');
       return;
     }
 
-    // Tocar som de notificação (beep) antes de falar
+    console.log('Iniciando som para senha:', senha.senha);
+
+    // Cancelar qualquer fala anterior antes de começar
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+    }
+
+    // Tocar som de notificação (beep) - 2 bips
     tocarBeep();
 
-    // Aguardar um pouco antes de falar a senha
+    // Aguardar o beep terminar antes de falar (ding + dong = ~2 segundos)
     setTimeout(() => {
-      // Usar Web Speech API para falar a senha
+      // Usar Web Speech API para falar a senha e o guichê
       if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(`Senha ${senha}`);
+        // Extrair apenas o número do guichê (ex: "Guichê 1" -> "1")
+        const numeroGuiche = senha.guiche.replace(/[^0-9]/g, '');
+        // Formato: "Senha N003 Guichê 1"
+        const mensagem = `Senha ${senha.senha} Guichê ${numeroGuiche}`;
+
+        console.log('Falando:', mensagem);
+
+        const utterance = new SpeechSynthesisUtterance(mensagem);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.9;
         utterance.pitch = 1;
         utterance.volume = 1;
+
         window.speechSynthesis.speak(utterance);
       }
-    }, 800);
+    }, 2100); // 2.1 segundos para garantir que o beep terminou
   };
 
   const tocarBeep = () => {

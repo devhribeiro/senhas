@@ -27,6 +27,10 @@ export default function Atendimento() {
     }
 
     loadData();
+
+    // Atualizar dados a cada 2 segundos para sincronização em tempo real
+    const interval = setInterval(loadData, 2000);
+    return () => clearInterval(interval);
   }, [isAuthenticated, router, usuario]);
 
   const loadData = async () => {
@@ -41,9 +45,27 @@ export default function Atendimento() {
       setGuicheAtual(guicheUsuario || null);
       setConfiguracao(configData);
 
-      if (senhasData.length > 0) {
-        setUltimaSenhaChamada(senhasData[senhasData.length - 1]);
+      if (senhasData.length > 0 && guicheUsuario) {
+        // Buscar a última senha chamada especificamente por este guichê
+        const senhasDoGuiche = senhasData.filter(
+          (s: SenhaChamada) => s.guiche === `Guichê ${guicheUsuario.numero}`
+        );
+
+        if (senhasDoGuiche.length > 0) {
+          const ultimaSenha = senhasDoGuiche[0];
+          // Se a última senha foi finalizada ou não compareceu, permitir nova chamada
+          if (ultimaSenha.status === 'finalizada' || ultimaSenha.status === 'nao_compareceu') {
+            setUltimaSenhaChamada(null);
+          } else {
+            setUltimaSenhaChamada(ultimaSenha);
+          }
+        } else {
+          setUltimaSenhaChamada(null);
+        }
+
         setSenhasRecentes(senhasData.slice(-10).reverse());
+      } else if (guicheUsuario) {
+        setUltimaSenhaChamada(null);
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
@@ -53,6 +75,15 @@ export default function Atendimento() {
   const chamarSenha = async (isPrioritaria: boolean) => {
     if (!guicheAtual) {
       alert('Você não está vinculado a nenhum guichê. Vá em Configuração para vincular.');
+      return;
+    }
+
+    // Verificar se há um atendimento em andamento que não foi finalizado
+    if (
+      ultimaSenhaChamada &&
+      (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo')
+    ) {
+      alert('Você precisa finalizar o atendimento atual antes de chamar uma nova senha.');
       return;
     }
 
@@ -85,9 +116,13 @@ export default function Atendimento() {
       await api.createSenha(novaSenha);
       await api.updateConfiguracao(config);
 
+      // Atualizar estado local imediatamente
       setConfiguracao(config);
       setUltimaSenhaChamada(novaSenha);
       setSenhasRecentes([novaSenha, ...senhasRecentes.slice(0, 9)]);
+
+      // Recarregar dados do servidor para sincronizar
+      await loadData();
 
       // Disparar evento para atualizar display
       window.dispatchEvent(new Event('storage'));
@@ -248,11 +283,40 @@ export default function Atendimento() {
               </div>
             </div>
 
+            {/* Aviso de Atendimento em Andamento */}
+            {ultimaSenhaChamada &&
+              (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo') && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <div className="flex items-center">
+                    <svg
+                      className="w-5 h-5 text-amber-600 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                    <p className="text-sm text-amber-800 font-medium">
+                      Finalize o atendimento atual antes de chamar uma nova senha
+                    </p>
+                  </div>
+                </div>
+              )}
+
             {/* Botões de Chamar Senha */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <button
                 onClick={() => chamarSenha(false)}
-                className="group bg-white hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1"
+                disabled={
+                  ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo')
+                }
+                className="group bg-white hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
                 <div className="flex flex-col items-center">
                   <div className="p-4 bg-blue-100 group-hover:bg-white rounded-full mb-4 transition-colors">
@@ -281,7 +345,11 @@ export default function Atendimento() {
 
               <button
                 onClick={() => chamarSenha(true)}
-                className="group bg-white hover:bg-gradient-to-br hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1"
+                disabled={
+                  ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo')
+                }
+                className="group bg-white hover:bg-gradient-to-br hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
                 <div className="flex flex-col items-center">
                   <div className="p-4 bg-orange-100 group-hover:bg-white rounded-full mb-4 transition-colors">
