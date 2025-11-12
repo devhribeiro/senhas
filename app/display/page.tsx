@@ -55,7 +55,7 @@ export default function Display() {
 
       if (senhas.length > 0) {
         // Filtrar apenas senhas chamadas (status "chamada")
-        const senhasChamadas = senhas.filter(s => s.status === 'chamada');
+        const senhasChamadas = senhas.filter((s: SenhaChamada) => s.status === 'chamada');
 
         if (senhasChamadas.length > 0) {
           // Pegar a senha chamada mais recente (última do array filtrado)
