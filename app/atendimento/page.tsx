@@ -313,8 +313,8 @@ export default function Atendimento() {
               <button
                 onClick={() => chamarSenha(false)}
                 disabled={
-                  ultimaSenhaChamada &&
-                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo')
+                  !!(ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
                 }
                 className="group bg-white hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
@@ -346,8 +346,8 @@ export default function Atendimento() {
               <button
                 onClick={() => chamarSenha(true)}
                 disabled={
-                  ultimaSenhaChamada &&
-                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo')
+                  !!(ultimaSenhaChamada &&
+                  (ultimaSenhaChamada.status === 'chamada' || ultimaSenhaChamada.status === 'atendendo'))
                 }
                 className="group bg-white hover:bg-gradient-to-br hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-md p-8 border border-gray-100 transition-all hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:transform-none"
               >
