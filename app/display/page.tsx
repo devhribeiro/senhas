@@ -71,8 +71,8 @@ export default function Display() {
         const senhasChamadas = senhas.filter((s: SenhaChamada) => s.status === 'chamada');
 
         if (senhasChamadas.length > 0) {
-          // Pegar a senha chamada mais recente (última do array filtrado)
-          const novaSenha = senhasChamadas[senhasChamadas.length - 1];
+          // Pegar a senha chamada mais recente (primeira do array pois vem DESC)
+          const novaSenha = senhasChamadas[0];
 
           // Se mudou a senha, tocar som
           if (senhaAtual && novaSenha.senha !== senhaAtual.senha) {
@@ -82,7 +82,7 @@ export default function Display() {
           setSenhaAtual(novaSenha);
 
           // Pegar as últimas 5 senhas chamadas (excluindo a atual)
-          const ultimas = senhasChamadas.slice(-6, -1).reverse();
+          const ultimas = senhasChamadas.slice(1, 6);
           setUltimasSenhas(ultimas);
         }
       }
