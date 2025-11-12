@@ -81,10 +81,12 @@ export default function Display() {
   const loadSenhas = async () => {
     try {
       const senhas = await api.getSenhas();
+      console.log('📋 Senhas carregadas:', senhas.length);
 
       if (senhas.length > 0) {
         // Filtrar apenas senhas chamadas (status "chamada") para exibir na tela grande
         const senhasChamadas = senhas.filter((s: SenhaChamada) => s.status === 'chamada');
+        console.log('📞 Senhas chamadas:', senhasChamadas.length);
 
         if (senhasChamadas.length > 0) {
           // Pegar a senha chamada mais recente (primeira do array pois vem DESC)
@@ -92,17 +94,22 @@ export default function Display() {
 
           // Criar identificador único combinando senha e horário
           const identificadorNovaSenha = `${novaSenha.senha}-${novaSenha.horario}`;
+          console.log('🆔 Identificador nova senha:', identificadorNovaSenha);
+          console.log('🆔 Última senha falada:', ultimaSenhaFalada);
 
           // Atualizar a senha atual sempre
           setSenhaAtual(novaSenha);
 
           // Mas só tocar o som se for uma senha NOVA (diferente da última falada)
           if (identificadorNovaSenha !== ultimaSenhaFalada) {
-            console.log('Nova senha detectada, tocando som:', novaSenha.senha);
+            console.log('🆕 Nova senha detectada! Chamando tocarSom...');
             setUltimaSenhaFalada(identificadorNovaSenha);
             tocarSom(novaSenha);
+          } else {
+            console.log('⏭️ Senha já foi falada, ignorando...');
           }
         } else {
+          console.log('❌ Nenhuma senha com status "chamada"');
           // Se não há senhas chamadas, limpar a senha atual
           setSenhaAtual(null);
         }
@@ -112,24 +119,31 @@ export default function Display() {
         setUltimasSenhas(ultimas);
       }
     } catch (error) {
-      console.error('Erro ao carregar senhas:', error);
+      console.error('❌ Erro ao carregar senhas:', error);
     }
   };
 
   const tocarSom = (senha: SenhaChamada) => {
+    console.log('=== tocarSom chamado ===');
+    console.log('audioHabilitado:', audioHabilitado);
+    console.log('audioContext:', audioContext);
+    console.log('senha:', senha);
+
     if (!audioHabilitado || !audioContext) {
-      console.log('Áudio não habilitado, não tocando som');
+      console.log('❌ Áudio não habilitado ou contexto não existe');
       return;
     }
 
-    console.log('Iniciando som para senha:', senha.senha);
+    console.log('✅ Iniciando som para senha:', senha.senha);
 
     // Cancelar qualquer fala anterior antes de começar
     if (window.speechSynthesis.speaking) {
+      console.log('Cancelando fala anterior');
       window.speechSynthesis.cancel();
     }
 
     // Tocar som de notificação (beep) - 2 bips
+    console.log('🔊 Tocando beep...');
     tocarBeep();
 
     // Aguardar o beep terminar antes de falar (ding + dong = ~2 segundos)
@@ -141,7 +155,7 @@ export default function Display() {
         // Formato: "Senha N003 Guichê 1"
         const mensagem = `Senha ${senha.senha} Guichê ${numeroGuiche}`;
 
-        console.log('Falando:', mensagem);
+        console.log('🗣️ Falando:', mensagem);
 
         const utterance = new SpeechSynthesisUtterance(mensagem);
         utterance.lang = 'pt-BR';
@@ -149,15 +163,26 @@ export default function Display() {
         utterance.pitch = 1;
         utterance.volume = 1;
 
+        utterance.onstart = () => console.log('✅ Speech iniciado');
+        utterance.onend = () => console.log('✅ Speech finalizado');
+        utterance.onerror = (e) => console.error('❌ Erro no speech:', e);
+
         window.speechSynthesis.speak(utterance);
+      } else {
+        console.log('❌ speechSynthesis não disponível');
       }
     }, 2100); // 2.1 segundos para garantir que o beep terminou
   };
 
   const tocarBeep = () => {
-    if (!audioContext) return;
+    console.log('🔔 tocarBeep chamado, audioContext:', audioContext);
+    if (!audioContext) {
+      console.log('❌ audioContext não existe');
+      return;
+    }
 
     try {
+      console.log('🎵 Criando osciladores...');
       // "DING" - som mais agudo (E - 659.25 Hz)
       const dingOscillator = audioContext.createOscillator();
       const dingGain = audioContext.createGain();
@@ -175,6 +200,7 @@ export default function Display() {
 
       dingOscillator.start(now);
       dingOscillator.stop(now + 1.2);
+      console.log('✅ DING iniciado');
 
       // "DONG" - som mais grave (C - 523.25 Hz) - começa 0.5s depois
       const dongOscillator = audioContext.createOscillator();
@@ -193,8 +219,9 @@ export default function Display() {
 
       dongOscillator.start(dongStart);
       dongOscillator.stop(dongStart + 1.5);
+      console.log('✅ DONG iniciado');
     } catch (error) {
-      console.log('Erro ao tocar ding dong:', error);
+      console.error('❌ Erro ao tocar ding dong:', error);
     }
   };
 
