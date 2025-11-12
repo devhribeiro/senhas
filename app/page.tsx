@@ -104,11 +104,6 @@ export default function Home() {
               Entrar
             </button>
           </form>
-
-          <div className="mt-6 text-center text-sm text-gray-500">
-            <p>Usuário padrão: <span className="font-semibold text-gray-700">admin</span></p>
-            <p>Senha padrão: <span className="font-semibold text-gray-700">admin</span></p>
-          </div>
         </div>
       </div>
     </div>
