@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql, initDatabase } from '@/lib/db-postgres';
+import prisma, { initDatabase } from '@/lib/db-prisma';
 
 export async function GET() {
   try {
     await initDatabase();
-    const result = await sql`SELECT * FROM guiches ORDER BY numero`;
-    return NextResponse.json(result.rows);
+    const guiches = await prisma.guiche.findMany({
+      orderBy: {
+        numero: 'asc'
+      }
+    });
+    return NextResponse.json(guiches);
   } catch (error) {
     console.error('Get guiches error:', error);
     return NextResponse.json({ error: 'Erro ao buscar guichês' }, { status: 500 });
@@ -17,7 +21,13 @@ export async function POST(request: NextRequest) {
     await initDatabase();
     const { id, numero, nome } = await request.json();
 
-    await sql`INSERT INTO guiches (id, numero, nome) VALUES (${id}, ${numero}, ${nome})`;
+    await prisma.guiche.create({
+      data: {
+        id,
+        numero,
+        nome
+      }
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -32,10 +42,15 @@ export async function DELETE(request: NextRequest) {
     const { id } = await request.json();
 
     // Desvincular usuários
-    await sql`UPDATE usuarios SET guicheId = NULL WHERE guicheId = ${id}`;
+    await prisma.usuario.updateMany({
+      where: { guicheId: id },
+      data: { guicheId: null }
+    });
 
     // Deletar guichê
-    await sql`DELETE FROM guiches WHERE id = ${id}`;
+    await prisma.guiche.delete({
+      where: { id }
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql, initDatabase } from '@/lib/db-postgres';
+import prisma, { initDatabase } from '@/lib/db-prisma';
 
 export async function GET() {
   try {
     await initDatabase();
-    const result = await sql`SELECT * FROM configuracao WHERE id = 1`;
-    return NextResponse.json(result.rows[0] || {});
+    const config = await prisma.configuracao.findUnique({
+      where: { id: 1 }
+    });
+    return NextResponse.json(config || {});
   } catch (error) {
     console.error('Get configuracao error:', error);
     return NextResponse.json({ error: 'Erro ao buscar configuração' }, { status: 500 });
@@ -17,19 +19,17 @@ export async function PUT(request: NextRequest) {
     await initDatabase();
     const { senhaAtualNormal, senhaAtualPrioritaria, prefixoNormal, prefixoPrioritaria } = await request.json();
 
-    await sql`
-      UPDATE configuracao
-      SET senhaAtualNormal = ${senhaAtualNormal},
-          senhaAtualPrioritaria = ${senhaAtualPrioritaria},
-          prefixoNormal = ${prefixoNormal},
-          prefixoPrioritaria = ${prefixoPrioritaria},
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = 1
-    `;
+    const updatedConfig = await prisma.configuracao.update({
+      where: { id: 1 },
+      data: {
+        senhaAtualNormal,
+        senhaAtualPrioritaria,
+        prefixoNormal,
+        prefixoPrioritaria
+      }
+    });
 
-    const result = await sql`SELECT * FROM configuracao WHERE id = 1`;
-
-    return NextResponse.json({ success: true, config: result.rows[0] });
+    return NextResponse.json({ success: true, config: updatedConfig });
   } catch (error) {
     console.error('Update configuracao error:', error);
     return NextResponse.json({ error: 'Erro ao atualizar configuração' }, { status: 500 });

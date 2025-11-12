@@ -1,0 +1,62 @@
+// Define database connection via the `DATABASE_URL` env var
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define custom output path for generated Prisma Client
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated-prisma-client"
+}
+
+// Modelo de usuários
+model Usuario {
+  id        String   @id
+  username  String   @unique
+  password  String
+  guicheId  String?
+  guiche    Guiche?  @relation(fields: [guicheId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("usuarios")
+}
+
+// Modelo de guichês
+model Guiche {
+  id        String    @id
+  numero    String
+  nome      String
+  usuarioId String?
+  usuarios  Usuario[]
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@map("guiches")
+}
+
+// Modelo de senhas chamadas
+model SenhaChamada {
+  id             Int       @id @default(autoincrement())
+  senha          String
+  guiche         String
+  horario        DateTime
+  isPrioritaria  Boolean
+  status         String    @default("chamada")
+  horarioInicio  DateTime?
+  horarioFim     DateTime?
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@map("senhas_chamadas")
+}
+
+// Modelo de configuração
+model Configuracao {
+  id                    Int      @id @default(1)
+  senhaAtualNormal      Int      @default(1)
+  senhaAtualPrioritaria Int      @default(1)
+  prefixoNormal         String   @default("N")
+  prefixoPrioritaria    String   @default("P")
+  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("configuracao")
+}

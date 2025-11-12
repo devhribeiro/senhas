@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql, initDatabase } from '@/lib/db-postgres';
+import prisma, { initDatabase } from '@/lib/db-prisma';
 
 export async function GET() {
   try {
     await initDatabase();
-    const result = await sql`SELECT * FROM senhas_chamadas ORDER BY created_at DESC`;
-    return NextResponse.json(result.rows);
+    const senhas = await prisma.senhaChamada.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    return NextResponse.json(senhas);
   } catch (error) {
     console.error('Get senhas error:', error);
     return NextResponse.json({ error: 'Erro ao buscar senhas' }, { status: 500 });
@@ -17,13 +21,17 @@ export async function POST(request: NextRequest) {
     await initDatabase();
     const { senha, guiche, horario, isPrioritaria, status } = await request.json();
 
-    const result = await sql`
-      INSERT INTO senhas_chamadas (senha, guiche, horario, isPrioritaria, status)
-      VALUES (${senha}, ${guiche}, ${horario}, ${isPrioritaria}, ${status || 'chamada'})
-      RETURNING id
-    `;
+    const novaSenha = await prisma.senhaChamada.create({
+      data: {
+        senha,
+        guiche,
+        horario: new Date(horario),
+        isPrioritaria,
+        status: status || 'chamada'
+      }
+    });
 
-    return NextResponse.json({ success: true, id: result.rows[0].id });
+    return NextResponse.json({ success: true, id: novaSenha.id });
   } catch (error) {
     console.error('Create senha error:', error);
     return NextResponse.json({ error: 'Erro ao criar senha' }, { status: 500 });
@@ -36,26 +44,28 @@ export async function PUT(request: NextRequest) {
     const { senha, horario, status, horarioInicio, horarioFim } = await request.json();
 
     // Encontrar a senha pela combinação de senha e horario
-    const senhaRecord = await sql`SELECT id FROM senhas_chamadas WHERE senha = ${senha} AND horario = ${horario}`;
+    const senhaRecord = await prisma.senhaChamada.findFirst({
+      where: {
+        senha: senha,
+        horario: new Date(horario)
+      }
+    });
 
-    if (senhaRecord.rows.length === 0) {
+    if (!senhaRecord) {
       return NextResponse.json({ error: 'Senha não encontrada' }, { status: 404 });
     }
 
-    const id = senhaRecord.rows[0].id;
-
     // Atualizar senha
-    await sql`
-      UPDATE senhas_chamadas
-      SET status = ${status},
-          horarioInicio = ${horarioInicio || null},
-          horarioFim = ${horarioFim || null}
-      WHERE id = ${id}
-    `;
+    const updatedSenha = await prisma.senhaChamada.update({
+      where: { id: senhaRecord.id },
+      data: {
+        status,
+        horarioInicio: horarioInicio ? new Date(horarioInicio) : null,
+        horarioFim: horarioFim ? new Date(horarioFim) : null
+      }
+    });
 
-    const updatedSenha = await sql`SELECT * FROM senhas_chamadas WHERE id = ${id}`;
-
-    return NextResponse.json({ success: true, senha: updatedSenha.rows[0] });
+    return NextResponse.json({ success: true, senha: updatedSenha });
   } catch (error) {
     console.error('Update senha error:', error);
     return NextResponse.json({ error: 'Erro ao atualizar senha' }, { status: 500 });
@@ -65,7 +75,7 @@ export async function PUT(request: NextRequest) {
 export async function DELETE() {
   try {
     await initDatabase();
-    await sql`DELETE FROM senhas_chamadas`;
+    await prisma.senhaChamada.deleteMany({});
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Delete senhas error:', error);
