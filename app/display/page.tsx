@@ -67,7 +67,7 @@ export default function Display() {
       const senhas = await api.getSenhas();
 
       if (senhas.length > 0) {
-        // Filtrar apenas senhas chamadas (status "chamada")
+        // Filtrar apenas senhas chamadas (status "chamada") para exibir na tela grande
         const senhasChamadas = senhas.filter((s: SenhaChamada) => s.status === 'chamada');
 
         if (senhasChamadas.length > 0) {
@@ -80,11 +80,11 @@ export default function Display() {
           }
 
           setSenhaAtual(novaSenha);
-
-          // Pegar as últimas 5 senhas chamadas (excluindo a atual)
-          const ultimas = senhasChamadas.slice(1, 6);
-          setUltimasSenhas(ultimas);
         }
+
+        // Pegar as últimas 5 senhas de TODAS (independente do status)
+        const ultimas = senhas.slice(senhasChamadas.length > 0 ? 1 : 0, senhasChamadas.length > 0 ? 6 : 5);
+        setUltimasSenhas(ultimas);
       }
     } catch (error) {
       console.error('Erro ao carregar senhas:', error);
