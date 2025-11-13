@@ -47,8 +47,12 @@ export async function initDatabase() {
           id: 1,
           senhaAtualNormal: 1,
           senhaAtualPrioritaria: 1,
+          senhaAtualResposta: 1,
+          senhaAtualRespostaPrioritaria: 1,
           prefixoNormal: 'N',
-          prefixoPrioritaria: 'P'
+          prefixoPrioritaria: 'P',
+          prefixoResposta: 'R',
+          prefixoRespostaPrioritaria: 'RP'
         }
       })
       console.log('✅ Configuração padrão criada')
